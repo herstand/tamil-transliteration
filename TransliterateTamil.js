@@ -1,31 +1,190 @@
 "use strict";
+const UTILITIES = {
+  "toObject" : function(map) {
+    return Array.from(map).reduce((obj, [key, value]) => (
+      Object.assign(obj, { [key]: value })
+    ), {});
+  }
+}
 
-const CharSet = {
-  "அ" : {
-    "iso" : "a"
-  },
+
+const TAMIL_VOWELS_FULL = {
+  "அ": { "iso": "a", "compoundForm": ""},
+  "ஆ": { "iso": "ā", "compoundForm": "ா"},
+  "இ": { "iso": "i", "compoundForm": "ி"},
+  "ஈ": { "iso": "ī", "compoundForm": "ீ"},
+  "உ": { "iso": "u", "compoundForm": "ு"},
+  "ஊ": { "iso": "ū", "compoundForm": "ூ"},
+  "எ": { "iso": "e", "compoundForm": "ெ"},
+  "ஏ": { "iso": "ē", "compoundForm": "ே"},
+  "ஐ": { "iso": "ai", "compoundForm": "ை"},
+  "ஒ": { "iso": "o", "compoundForm": "ொ"},
+  "ஓ": { "iso": "ō", "compoundForm": "ோ"},
+  "ஒள": { "iso": "au", "compoundForm": "ௌ"}
+};
+const TAMIL_VOWELS_COMPOUND = UTILITIES.toObject(
+  new Map(
+    Object.values(TAMIL_VOWELS_FULL).map(
+      (val, i) => [val.compoundForm, {"iso" : val.iso}]
+    )
+  )
+);
+const TAMIL_CONSONANTS_VALLINAM = {
   "க" : {
     "iso": {
       "hard" : "k",
       "medium" : "g",
       "soft" : "h"
     }
+  },
+  "ச" : {
+    "iso": {
+      "hard" : "c",
+      "medium" : "j",
+      "soft" : "s"
+    }
+  },
+  "ட" : {
+    "iso": {
+      "hard" : "ṭ",
+      "medium" : "ṭ",
+      "soft" : "ṭ"
+    }
+  },
+  "த" : {
+    "iso": {
+      "hard" : "t",
+      "medium" : "t",
+      "soft" : "t"
+    }
+  },
+  "ப" : {
+    "iso": {
+      "hard" : "p",
+      "medium" : "b",
+      "soft" : "b"
+    }
+  },
+  "ற" : {
+    "iso": {
+      "hard" : "ṟ",
+      "medium" : "ṟ",
+      "soft" : "ṟ"
+    }
+  }
+};
+const TAMIL_CONSONANTS_IDAYINAM = {
+  "ய" : {
+    "iso" : {
+      "hard" : "y",
+      "medium" : "y",
+      "soft" : "y"
+    }
+  },
+  "ர" : {
+    "iso" : {
+      "hard" : "r",
+      "medium" : "r",
+      "soft" : "r"
+    }
+  },
+  "ல" : {
+    "iso" : {
+      "hard" : "l",
+      "medium" : "l",
+      "soft" : "l"
+    }
+  },
+  "வ" : {
+    "iso" : {
+      "hard" : "v",
+      "medium" : "v",
+      "soft" : "v"
+    }
+  },
+  "ழ" : {
+    "iso" : {
+      "hard" : "ḻ",
+      "medium" : "ḻ",
+      "soft" : "ḻ"
+    }
+  },
+  "ள" : {
+    "iso" : {
+      "hard" : "ḷ",
+      "medium" : "ḷ",
+      "soft" : "ḷ"
+    }
+  }
+};
+const TAMIL_CONSONANTS_MELLINAM = {
+  "ங" : {
+    "iso" : {
+      "hard" : "ṅ",
+      "medium" : "ṅ",
+      "soft" : "ṅ"
+    }
+  },
+  "ஞ" : {
+    "iso" : {
+      "hard" : "ñ",
+      "medium" : "ñ",
+      "soft" : "ñ"
+    }
+  },
+  "ண" : {
+    "iso" : {
+      "hard" : "ṇ",
+      "medium" : "ṇ",
+      "soft" : "ṇ"
+    }
+  },
+  "ந" : {
+    "iso" : {
+      "hard" : "n",
+      "medium" : "n",
+      "soft" : "n"
+    }
+  },
+  "ம" : {
+    "iso" : {
+      "hard" : "m",
+      "medium" : "m",
+      "soft" : "m"
+    }
+  },
+  "ன" : {
+    "iso" : {
+      "hard" : "ṉ",
+      "medium" : "ṉ",
+      "soft" : "ṉ"
+    }
   }
 };
 
+const TAMIL_CONSONANTS = Object.assign(
+  {},
+  TAMIL_CONSONANTS_VALLINAM,
+  TAMIL_CONSONANTS_IDAYINAM,
+  TAMIL_CONSONANTS_MELLINAM
+);
+
 // Hard
-const isVallinam = (glyph) => ["க","ச","ட","த","ப","ற"].includes(glyph);
+const isVallinam = (glyph) =>
+  Object.keys(TAMIL_CONSONANTS_VALLINAM).includes(glyph);
 // Medium
-const isIdayinam = (glyph) => ["ய","ர","ல","வ","ழ","ள"].includes(glyph);
+const isIdayinam = (glyph) =>
+  Object.keys(TAMIL_CONSONANTS_IDAYINAM).includes(glyph);
 // Soft
-const isMellinam = (glyph) => ["ங","ஞ","ண","ந","ம","ன"].includes(glyph);
+const isMellinam = (glyph) =>
+  Object.keys(TAMIL_CONSONANTS_MELLINAM).includes(glyph);
 const isBorrowed = (glyph) => ["ஜ","ஷ","ஸ","ஹ"].includes(glyph);
 const isConsonant = (glyph) =>
   isVallinam(glyph) || isIdayinam(glyph) || isMellinam(glyph) || isBorrowed(glyph);
 const isFullVowel = (glyph) =>
-  ["அ","ஆ","இ","ஈ","உ","ஊ","எ","ஏ","ஐ","ஒ","ஓ","ஒள"].includes(glyph);
+  Object.keys(TAMIL_VOWELS_FULL).includes(glyph);
 const isCompoundVowel = (glyph) =>
-  ["ா","ி","ீ","ு","ூ","ெ","ே","ை","ொ","ோ","ௌ"].includes(glyph);
+  Object.keys(TAMIL_VOWELS_COMPOUND).includes(glyph);
 const isVowel = (glyph) =>
   isFullVowel(glyph) || isCompoundVowel(glyph);
 const isVirama = (glyph) =>
@@ -35,6 +194,12 @@ const isTamil = (glyph) =>
 
 const isMuted = (word, index) =>
   word.length > index + 1 && isVirama(word[index + 1]);
+const hasCompoundSibling = (word, index) =>
+  word.length > index + 1 &&
+  (
+    isVirama(word[index + 1]) ||
+    isCompoundVowel(word[index + 1])
+  );
 const isGeminated = (word, index) =>
   word.length > index + 1 && word[index + 1] === word[index];
 const isPostMutedVallinam = (word, index) =>
@@ -56,20 +221,27 @@ const isPostMutedIdayinam = (word, index) =>
     isIdayinam(word[index - 2])
   );
 const isBetweenTwoVowels = (word, index) =>
-  (
-    index > 0 &&
-    word.length > index + 1 &&
-    isVowel(word[index - 1]) &&
-    isFullVowel(word[index + 1])
-  );
+  {
+    return index > 0 &&
+    (
+      isVowel(word[index - 1]) ||
+      !isMuted(word[index - 1])
+    ) &&
+    (
+      !isMuted(word[index]) ||
+      isVowel(word[index + 1])
+    )
+  };
 
 const getPronunciation = (word, index) => {
   if (!isTamil(word[index])) {
     return word[index];
   } else if (isVirama(word[index])) {
     return "";
-  } else if (isVowel(word[index])) {
-    return CharSet[word[index]].iso;
+  } else if (isFullVowel(word[index])) {
+    return TAMIL_VOWELS_FULL[word[index]].iso;
+  } else if (isCompoundVowel(word[index])) {
+    return TAMIL_VOWELS_COMPOUND[word[index]].iso;
   } else if (
     index === 0 ||
     isMuted(word,index) ||
@@ -77,22 +249,23 @@ const getPronunciation = (word, index) => {
     isPostMutedVallinam(word,index)
   ) {
     return (
-      CharSet[word[index]].iso.hard +
-      (!isMuted(word, index) ? "a" : "")
+      TAMIL_CONSONANTS[word[index]].iso.hard +
+      (!hasCompoundSibling(word, index) ? "a" : "")
     );
   } else if (
     isPostMutedMellinam(word, index) ||
     isPostMutedIdayinam(word, index)
   ) {
-    return CharSet[word[index]].iso.medium;
+    return TAMIL_CONSONANTS[word[index]].iso.medium;
   } else if (
     isBetweenTwoVowels(word, index)
   ) {
-    return CharSet[word[index]].iso.soft;
+    return TAMIL_CONSONANTS[word[index]].iso.soft +
+      (!hasCompoundSibling(word, index) ? "a" : "")
   } else {
     return (
-      CharSet[word[index]].iso.hard +
-      (!isMuted(word, index) ? "a" : "")
+      TAMIL_CONSONANTS[word[index]].iso.hard +
+      (!hasCompoundSibling(word, index) ? "a" : "")
     );
   }
 }
