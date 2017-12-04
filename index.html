@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tamil Transliteration</title>
+  <meta charset="utf-16">
+  <style type="text/css">
+    input {
+      font-size:50px;
+      width:300px;
+      display:inline-block;
+      margin:0;
+      padding:3px;
+      vertical-align:top;
+    }
+    label {
+      width:300px;
+      display:inline-block;
+      margin:0;
+      padding:5px;
+      vertical-align:top;
+      font-weight:bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Convert Tamil to ISO Transliteration</h1>
+  <label for="tamil">Tamil</label><label for="iso">Transliteration</label><br />
+  <input id="tamil" value="அக்க" />
+  <input id="iso" value="" />
+  <script type="text/javascript">
+  {
+    const getTamil = () =>
+      document.getElementById("tamil").value;
+    const getIso = () =>
+      document.getElementById("iso").value;
+
+    const importer = {
+      url: (url) => {
+        return new Promise((resolve, reject) => {
+          let script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = url;
+          script.addEventListener('load', () => resolve(script), false);
+          script.addEventListener('error', () => reject(script), false);
+          document.body.appendChild(script);
+        });
+      },
+      urls: (urls) => {
+        return Promise.all(urls.map(importer.url));
+      }
+    };
+    const convertTamilToIso = () => {
+      const word = getTamil();
+      let transliteration = "";
+      word.split("").map((glyph, i) => transliteration += getPronunciation(word, i));
+      document.getElementById("iso").value = transliteration;
+    }
+    const convertIsoToTamil = () => {
+      const word = getIso();
+      let tamilString = "";
+      word.split("").map((glyph, i) => tamilString += getTamilString(word, i));
+      console.log(tamilString);
+    }
+    const rejected = () => console.log("REJECTED!");
+
+    {
+      document.getElementById("tamil").addEventListener(
+        "input",
+        convertTamilToIso
+      );
+      document.getElementById("iso").addEventListener(
+        "input",
+        convertIsoToTamil
+      );
+    }
+
+
+    importer["url"]("map.js").then(convertTamilToIso);
+  }
+  </script>
+</body>
+</html>
