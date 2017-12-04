@@ -2,11 +2,9 @@
 
 const CharSet = {
   "அ" : {
-    "glyph": "அ",
     "iso" : "a"
   },
   "க" : {
-    "glyph": "க",
     "iso": {
       "hard" : "k",
       "medium" : "g",
@@ -15,17 +13,15 @@ const CharSet = {
   }
 };
 
-// Hard consonant
-const isVallinam = (glyph) =>
-  ["க","ச","ட","த","ப","ற"].includes(glyph);
-// Medium consonant
-const isIdayinam = (glyph) =>
-  ["ய","ர","ல","வ","ழ","ள"].includes(glyph);
-// Soft consonant
-const isMellinam = (glyph) =>
- ["ங","ஞ","ண","ந","ம","ன"].includes(glyph);
+// Hard
+const isVallinam = (glyph) => ["க","ச","ட","த","ப","ற"].includes(glyph);
+// Medium
+const isIdayinam = (glyph) => ["ய","ர","ல","வ","ழ","ள"].includes(glyph);
+// Soft
+const isMellinam = (glyph) => ["ங","ஞ","ண","ந","ம","ன"].includes(glyph);
+const isBorrowed = (glyph) => ["ஜ","ஷ","ஸ","ஹ"].includes(glyph);
 const isConsonant = (glyph) =>
-  isVallinam(glyph) || isIdayinam(glyph) || isMellinam(glyph);
+  isVallinam(glyph) || isIdayinam(glyph) || isMellinam(glyph) || isBorrowed(glyph);
 const isFullVowel = (glyph) =>
   ["அ","ஆ","இ","ஈ","உ","ஊ","எ","ஏ","ஐ","ஒ","ஓ","ஒள"].includes(glyph);
 const isCompoundVowel = (glyph) =>
